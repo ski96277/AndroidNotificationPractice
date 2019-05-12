@@ -1,9 +1,14 @@
 package com.example.androidnotificationpractice;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -14,6 +19,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
+import retrofit2.http.Header;
+import retrofit2.http.POST;
+
 public class Profile_Activity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     private static final String NODE_USERS = "Users";
@@ -23,7 +36,7 @@ public class Profile_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         //get the unique Token
         FirebaseInstanceId.getInstance().getInstanceId()
@@ -70,4 +83,83 @@ public class Profile_Activity extends AppCompatActivity {
 
 
     }
+
+   /* public void send_notification(View view) {
+sentToNotification();
+    }
+
+    private void sentToNotification() {
+
+
+        String to = "fKCEcM0jI0U:APA91bFUS1Zwo2-Ce3B8YRZAjCt3t3DXC5tG3FXrI8Bc-UyucJbUvuh-Fx6Ngj0ZaN5Y8T3F6FvEI28atDl1iL48ZvpmUdmb4lAOUnYZ_p55YcGIQ1F068QVqIgnl9-BsnSmTvtawKCR";
+
+        String collapseKey = "green";
+        Notification notification = new Notification("Hello bro", "title23");
+        Data data = new Data("Hello2", "title2", "key1", "key2");
+        Message notificationTask = new Message(to, collapseKey, notification, data);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://fcm.googleapis.com/")//url of FCM message server
+                .addConverterFactory(GsonConverterFactory.create())//use for convert JSON file into object
+                .build();
+
+        ServiceAPI api = retrofit.create(ServiceAPI.class);
+
+        Call<Message> call = api.sendMessage("key=AIzaSyAJa09OyxZfth5AL2LXZFKQ4W8s8DUzH8o", notificationTask);
+
+        call.enqueue(new Callback<Message>() {
+            @Override
+            public void onResponse(Call<Message> call, retrofit2.Response<Message> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+
+                Log.e("TAG", t.getMessage());
+            }
+        });
+    }
+
+    public class Message {
+
+        private String to;
+        private String collapseKey;
+        private Notification notification;
+        private Data data;
+
+        public Message(String to, String collapseKey, Notification notification, Data data) {
+            this.to = to;
+            this.collapseKey = collapseKey;
+            this.notification = notification;
+            this.data = data;
+        }
+    }
+
+    public class Data {
+
+        private String body;
+        private String title;
+        private String key1;
+        private String key2;
+
+        public Data(String body, String title, String key1, String key2) {
+            this.body = body;
+            this.title = title;
+            this.key1 = key1;
+            this.key2 = key2;
+        }
+    }
+
+    public class Notification {
+
+        private String body;
+        private String title;
+
+        public Notification(String body, String title) {
+            this.body = body;
+            this.title = title;
+        }
+    }*/
+
 }

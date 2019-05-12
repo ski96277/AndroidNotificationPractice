@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     // 2. Notification Builder
     // 3. Notification manger
 
-    private static final String CHANNEL_ID = "imran_sk";
+    public static final String CHANNEL_ID = "imran_sk";
     private static final String CHANNEL_NAME = "imran sk";
     private static final String CHANNEL_description = "Notification Test";
 
@@ -152,16 +152,5 @@ public class MainActivity extends AppCompatActivity {
         display_notification();
     }*/
 
-    private void display_notification() {
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(this, CHANNEL_ID)
-                        .setSmallIcon(R.drawable.icon)
-                        .setContentText("This the Test Notification")
-                        .setContentTitle("Oh     Yes")
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(1, builder.build());
-    }
 
 }
