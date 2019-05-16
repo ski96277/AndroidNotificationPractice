@@ -1,6 +1,8 @@
 package com.example.androidnotificationpractice;
 
-public class Users {
+import java.io.Serializable;
+
+public class Users implements Serializable {
 
     String email;
     String token;
@@ -8,6 +10,9 @@ public class Users {
     public Users(String email, String token) {
         this.email = email;
         this.token = token;
+    }
+    public Users(){
+
     }
 
     public String getEmail() {

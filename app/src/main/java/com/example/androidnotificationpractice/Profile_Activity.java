@@ -7,17 +7,26 @@ import android.os.Message;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,12 +40,19 @@ public class Profile_Activity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     private static final String NODE_USERS = "Users";
 
+    private List<Users> userList;
+
+    private RecyclerView recyclerView;
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        progressBar = findViewById(R.id.progressbar);
         firebaseAuth = FirebaseAuth.getInstance();
+        loadUsers();
 
         //get the unique Token
         FirebaseInstanceId.getInstance().getInstanceId()
@@ -55,6 +71,42 @@ public class Profile_Activity extends AppCompatActivity {
 
                 });
         //get the unique Token END
+    }
+
+    private void loadUsers(){
+        progressBar.setVisibility(View.VISIBLE);
+        userList = new ArrayList<>();
+        recyclerView = findViewById(R.id.recyclerview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("Users");
+        dbUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                progressBar.setVisibility(View.GONE);
+                if(dataSnapshot.exists()){
+
+                    for(DataSnapshot dsUser: dataSnapshot.getChildren()){
+
+                        Users user = dsUser.getValue(Users.class);
+                        userList.add(user);
+
+                    }
+                    Log.e("TAG user", "onDataChange: "+userList.size() );
+
+                    UserAdapter adapter = new UserAdapter(Profile_Activity.this, userList);
+                    recyclerView.setAdapter(adapter);
+
+                }else{
+                    Toast.makeText(Profile_Activity.this, "No user found", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -84,82 +136,5 @@ public class Profile_Activity extends AppCompatActivity {
 
     }
 
-   /* public void send_notification(View view) {
-sentToNotification();
-    }
-
-    private void sentToNotification() {
-
-
-        String to = "fKCEcM0jI0U:APA91bFUS1Zwo2-Ce3B8YRZAjCt3t3DXC5tG3FXrI8Bc-UyucJbUvuh-Fx6Ngj0ZaN5Y8T3F6FvEI28atDl1iL48ZvpmUdmb4lAOUnYZ_p55YcGIQ1F068QVqIgnl9-BsnSmTvtawKCR";
-
-        String collapseKey = "green";
-        Notification notification = new Notification("Hello bro", "title23");
-        Data data = new Data("Hello2", "title2", "key1", "key2");
-        Message notificationTask = new Message(to, collapseKey, notification, data);
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://fcm.googleapis.com/")//url of FCM message server
-                .addConverterFactory(GsonConverterFactory.create())//use for convert JSON file into object
-                .build();
-
-        ServiceAPI api = retrofit.create(ServiceAPI.class);
-
-        Call<Message> call = api.sendMessage("key=AIzaSyAJa09OyxZfth5AL2LXZFKQ4W8s8DUzH8o", notificationTask);
-
-        call.enqueue(new Callback<Message>() {
-            @Override
-            public void onResponse(Call<Message> call, retrofit2.Response<Message> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<Message> call, Throwable t) {
-
-                Log.e("TAG", t.getMessage());
-            }
-        });
-    }
-
-    public class Message {
-
-        private String to;
-        private String collapseKey;
-        private Notification notification;
-        private Data data;
-
-        public Message(String to, String collapseKey, Notification notification, Data data) {
-            this.to = to;
-            this.collapseKey = collapseKey;
-            this.notification = notification;
-            this.data = data;
-        }
-    }
-
-    public class Data {
-
-        private String body;
-        private String title;
-        private String key1;
-        private String key2;
-
-        public Data(String body, String title, String key1, String key2) {
-            this.body = body;
-            this.title = title;
-            this.key1 = key1;
-            this.key2 = key2;
-        }
-    }
-
-    public class Notification {
-
-        private String body;
-        private String title;
-
-        public Notification(String body, String title) {
-            this.body = body;
-            this.title = title;
-        }
-    }*/
 
 }
