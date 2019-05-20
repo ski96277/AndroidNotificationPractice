@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.androidnotificationpractice"
-    >
+    package="com.example.androidnotificationpractice">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -14,7 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Send_Notification_Activity"></activity>
+
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity android:name=".AlertActivity" />
+        <activity android:name=".Send_Notification_Activity" />
         <activity
             android:name=".Notification_Show_Activity"
             android:parentActivityName=".Profile_Activity" />

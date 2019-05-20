@@ -1,7 +1,9 @@
 package com.example.androidnotificationpractice;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Message;
 import android.provider.ContactsContract;
@@ -53,6 +55,10 @@ public class Profile_Activity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressbar);
         firebaseAuth = FirebaseAuth.getInstance();
         loadUsers();
+
+        //service started
+        startService(new Intent(this,MyService.class));
+
 
         //get the unique Token
         FirebaseInstanceId.getInstance().getInstanceId()

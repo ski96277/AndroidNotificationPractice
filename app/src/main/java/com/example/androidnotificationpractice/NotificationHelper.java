@@ -23,6 +23,7 @@ public class NotificationHelper {
                         .setSmallIcon(R.drawable.icon)
                         .setContentText(body)
                         .setContentTitle(title)
+                        .setSmallIcon(R.drawable.icon)
                         .setContentIntent(pendingIntent)
                         .setAutoCancel(true)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT);
